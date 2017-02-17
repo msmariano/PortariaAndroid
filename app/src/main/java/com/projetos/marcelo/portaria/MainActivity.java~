@@ -30,7 +30,6 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
-//teste github
 public class MainActivity extends AppCompatActivity  {
 
     ImageButton IbOnOff;
