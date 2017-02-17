@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<instant-run
+    abi="armeabi-v7a,armeabi"
+    api-level="23"
+    density="xhdpi"
+    format="7"
+    timestamp="80273516594913"
+    token="525340820051844249" >
+
+    <task
+        name="javac"
+        duration="1405" />
+    <task
+        name="instant-run-dex"
+        duration="0" />
+    <task
+        name="instant-run-transform"
+        duration="117" />
+    <task
+        name="verifier"
+        duration="6" />
+
+    <artifact
+        location="C:\Users\marcelo.mariano\Google Drive\Software\Desenvolvimento\Projetos\Portaria\app\build\intermediates\transforms\dex\debug\folders\1000\5\slice_8\classes.dex"
+        type="DEX" />
+
+    <build timestamp="79991490296308" >
+        <artifact
+            location="C:\Users\marcelo.mariano\Google Drive\Software\Desenvolvimento\Projetos\Portaria\app\build\outputs\apk\app-debug.apk"
+            type="MAIN" />
+    </build>
+    <build timestamp="80273516594913" >
+        <artifact
+            location="C:\Users\marcelo.mariano\Google Drive\Software\Desenvolvimento\Projetos\Portaria\app\build\intermediates\transforms\dex\debug\folders\1000\5\slice_8\classes.dex"
+            type="DEX" />
+    </build>
+
+</instant-run>
