@@ -113,15 +113,19 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
+
         //
 
 
 
         textView = (TextView)findViewById(R.id.textView );
-        //textView2 = (TextView)findViewById(R.id.textView2 );
-        //textView3 = (TextView)findViewById(R.id.textView3 );
+        textView2 = (TextView)findViewById(R.id.textView2 );
+        textView3 = (TextView)findViewById(R.id.textView3 );
         textView4 = (TextView)findViewById(R.id.textView4 );
         textView5 = (TextView)findViewById(R.id.textView5 );
+
+
+        textView4.setText("teste.....");
 
         textView.setText(IMEI);
 
@@ -214,8 +218,8 @@ public class MainActivity extends AppCompatActivity  {
 
 
                 textView.setText("Distancia Origem:"+String.valueOf(org.distanceTo(location)));
-                //textView2.setText("Latitude: "+Location.convert(location.getLatitude(),Location.PARCELABLE_WRITE_RETURN_VALUE));
-                //textView3.setText("Longitude:"+Location.convert(location.getLongitude(),Location.PARCELABLE_WRITE_RETURN_VALUE));
+                textView2.setText("Latitude: "+Location.convert(location.getLatitude(),Location.PARCELABLE_WRITE_RETURN_VALUE));
+                textView3.setText("Longitude:"+Location.convert(location.getLongitude(),Location.PARCELABLE_WRITE_RETURN_VALUE));
 
 
 
@@ -239,10 +243,20 @@ public class MainActivity extends AppCompatActivity  {
 
             }
         };
-      /*  locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER,
-                0,
-                0,
-                locationListenerGps);*/
+
+        try {
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER,
+                    0,
+                    0,
+                    locationListenerGps);
+
+
+        }
+        catch (Exception e){
+            showMessage(e.getMessage());
+        }
+
 
 
 
@@ -334,6 +348,12 @@ public class MainActivity extends AppCompatActivity  {
             }
         }
     }
+
+    public void showMessage(String mens){
+        Toast toast = Toast.makeText(context, mens, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -399,6 +419,9 @@ public class MainActivity extends AppCompatActivity  {
                                 0,
                                 0,
                                 locationListenerGps);
+
+                        Toast toast = Toast.makeText(context, "GPS Requesitado!", Toast.LENGTH_SHORT);
+                        toast.show();
 
 
                     }
