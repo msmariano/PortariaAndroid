@@ -32,7 +32,9 @@ import java.net.Socket;
 
 //teste github
 public class MainActivity extends AppCompatActivity  {
-
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
+    private static final int MY_PERMISSIONS_READ_PHONE_STATE =1 ;
+    private static final int MY_PERMISSIONS_ACCESS_FINE_LOCATION =2 ;
     ImageButton IbOnOff;
     ImageButton IbCamera;
     ImageButton IbSalvarLoc;
@@ -52,32 +54,46 @@ public class MainActivity extends AppCompatActivity  {
     TextView textView4;
     TextView textView5;
     SQLiteDatabase mydatabase;
+    TelephonyManager telephony;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TelephonyManager telephony;
+
         context = getApplicationContext();
         bGpsFirst = false;
-        telephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        if (ContextCompat.checkSelfPermission(this,Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_PHONE_STATE},0);
-        else
-        {
-            IMEI =  telephony.getDeviceId();
-        }
-        if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.SEND_SMS)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.SEND_SMS},
+                        MY_PERMISSIONS_REQUEST_SEND_SMS);
+            }
         }
 
-        Toast.makeText(context, IMEI, Toast.LENGTH_SHORT).show();
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+
+
+
+
+
+        /*if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        }*/
+
+        //Toast.makeText(context, IMEI, Toast.LENGTH_SHORT).show();
+        //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         mydatabase = openOrCreateDatabase("portaria.db",MODE_PRIVATE,null);
-        //mydatabase.execSQL("CREATE TABLE IF NOT EXISTS TutorialsPoint(Username VARCHAR,Password VARCHAR);");
-        //mydatabase.execSQL("CREATE TABLE IF NOT EXISTS Parametros(longitude NUMERIC,latitude NUMERIC);");
-        //mydatabase.execSQL("INSERT INTO Parametros VALUES(1234,5678);");
+        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS TutorialsPoint(Username VARCHAR,Password VARCHAR);");
+        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS Parametros(longitude NUMERIC,latitude NUMERIC);");
+        mydatabase.execSQL("INSERT INTO Parametros VALUES(1234,5678);");
         Cursor c=mydatabase.rawQuery("SELECT * FROM Parametros", null);
         textView3 = (TextView)findViewById(R.id.textView3 );
         textView2 = (TextView)findViewById(R.id.textView2 );
@@ -200,10 +216,10 @@ public class MainActivity extends AppCompatActivity  {
 
             }
         };
-        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER,
+      /*  locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER,
                 0,
                 0,
-                locationListenerGps);
+                locationListenerGps);*/
 
 
 
@@ -295,4 +311,79 @@ public class MainActivity extends AppCompatActivity  {
             }
         }
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_SEND_SMS: {
+                if (ContextCompat.checkSelfPermission(this,Manifest.permission.READ_PHONE_STATE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                            Manifest.permission.READ_PHONE_STATE)) {
+                    } else {
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{Manifest.permission.READ_PHONE_STATE},
+                                MY_PERMISSIONS_READ_PHONE_STATE);
+                    }
+                }
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        return;
+
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "SMS faild, please try again.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+            case MY_PERMISSIONS_READ_PHONE_STATE:{
+                if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    } else {
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                MY_PERMISSIONS_ACCESS_FINE_LOCATION);
+                    }
+                }
+                if(grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    telephony = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+                    if(telephony !=null) {
+                        IMEI = telephony.getDeviceId();
+                       Toast.makeText(context, IMEI, Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(),
+                                "Falhou ao obter IMEI.", Toast.LENGTH_LONG).show();
+                    }
+                    return;
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),
+                            "Falhou ao obter permissão para ler estado do celular.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+            }
+            case MY_PERMISSIONS_ACCESS_FINE_LOCATION:{
+                    if(grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER,
+                                0,
+                                0,
+                                locationListenerGps);
+
+
+                    }
+                    return;
+                }
+
+            }
+        }
+
+
 }
