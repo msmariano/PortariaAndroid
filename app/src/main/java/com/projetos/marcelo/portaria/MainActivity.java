@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity  {
     ImageButton IbOnOff;
     ImageButton IbCamera;
     ImageButton IbSalvarLoc;
+    ImageButton ibMove;
     Context context;
     private boolean connected = false;
     int milliseconds;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity  {
     TextView textView5;
     SQLiteDatabase mydatabase;
     TelephonyManager telephony;
+    String mensagem = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +132,7 @@ public class MainActivity extends AppCompatActivity  {
         IbOnOff = (ImageButton) findViewById(R.id.btOnOff );
         IbCamera = (ImageButton) findViewById(R.id.btCamera);
         IbSalvarLoc  = (ImageButton) findViewById(R.id.IbSalvarLoc);
+        ibMove = (ImageButton) findViewById(R.id.btMove);
         IbSalvarLoc.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
 
@@ -137,6 +141,25 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
 
+
+
+        ibMove.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+
+            {
+                if(mensagem.equals("move040370"))
+                    mensagem = "nomove040370";
+                else
+                    mensagem = "move040370";
+
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage("041985064115", null, mensagem, null, null);
+                Toast.makeText(getApplicationContext(), "Move",
+                        Toast.LENGTH_LONG).show();
+
+
+            }
+        });
 
         IbOnOff.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
