@@ -32,10 +32,10 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 //teste github
-public class MainActivity extends AppCompatActivity  {
-    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
-    private static final int MY_PERMISSIONS_READ_PHONE_STATE =1 ;
-    private static final int MY_PERMISSIONS_ACCESS_FINE_LOCATION =2 ;
+public class MainActivity extends AppCompatActivity {
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 0;
+    private static final int MY_PERMISSIONS_READ_PHONE_STATE = 1;
+    private static final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 2;
     ImageButton IbOnOff;
     ImageButton IbCamera;
     ImageButton IbSalvarLoc;
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity  {
     public Location org;
     boolean bGpsFirst;
     private LocationManager locationManager;
-    public double dLatitude,dLongitude;
+    public double dLatitude, dLongitude;
     LocationListener locationListenerGps;
     TextView textView;
     TextView textView2;
@@ -93,36 +93,36 @@ public class MainActivity extends AppCompatActivity  {
         //Toast.makeText(context, IMEI, Toast.LENGTH_SHORT).show();
         //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        mydatabase = openOrCreateDatabase("portaria.db",MODE_PRIVATE,null);
+        mydatabase = openOrCreateDatabase("portaria.db", MODE_PRIVATE, null);
         mydatabase.execSQL("CREATE TABLE IF NOT EXISTS TutorialsPoint(Username VARCHAR,Password VARCHAR);");
+        mydatabase.execSQL("DROP TABLE Parametros;");
         mydatabase.execSQL("CREATE TABLE IF NOT EXISTS Parametros(longitude NUMERIC,latitude NUMERIC);");
         mydatabase.execSQL("INSERT INTO Parametros VALUES(1234,5678);");
-        Cursor c=mydatabase.rawQuery("SELECT * FROM Parametros", null);
-        textView3 = (TextView)findViewById(R.id.textView3 );
-        textView2 = (TextView)findViewById(R.id.textView2 );
-        c.moveToFirst();
-        if(c.getCount()==0)
-        {
-            textView3.setText( "No records found");
 
-        }
-        else {
+
+
+
+        Cursor c = mydatabase.rawQuery("SELECT * FROM Parametros", null);
+        textView3 = (TextView) findViewById(R.id.textView3);
+        textView2 = (TextView) findViewById(R.id.textView2);
+        c.moveToFirst();
+        if (c.getCount() == 0) {
+            textView3.setText("No records found");
+
+        } else {
             textView2.setText(c.getString(0));
             textView3.setText(c.getString(1));
         }
 
 
-
-
         //
 
 
-
-        textView = (TextView)findViewById(R.id.textView );
-        textView2 = (TextView)findViewById(R.id.textView2 );
-        textView3 = (TextView)findViewById(R.id.textView3 );
-        textView4 = (TextView)findViewById(R.id.textView4 );
-        textView5 = (TextView)findViewById(R.id.textView5 );
+        textView = (TextView) findViewById(R.id.textView);
+        textView2 = (TextView) findViewById(R.id.textView2);
+        textView3 = (TextView) findViewById(R.id.textView3);
+        textView4 = (TextView) findViewById(R.id.textView4);
+        textView5 = (TextView) findViewById(R.id.textView5);
 
 
         textView4.setText("teste.....");
@@ -130,34 +130,33 @@ public class MainActivity extends AppCompatActivity  {
         textView.setText(IMEI);
 
 
-        Intent intent = new Intent( getApplicationContext(), MediaPlayerService.class );
-        intent.setAction( MediaPlayerService.ACTION_PLAY );
-        startService( intent);
-        IbOnOff = (ImageButton) findViewById(R.id.btOnOff );
+        Intent intent = new Intent(getApplicationContext(), MediaPlayerService.class);
+        intent.setAction(MediaPlayerService.ACTION_PLAY);
+        startService(intent);
+        IbOnOff = (ImageButton) findViewById(R.id.btOnOff);
         IbCamera = (ImageButton) findViewById(R.id.btCamera);
-        IbSalvarLoc  = (ImageButton) findViewById(R.id.IbSalvarLoc);
+        IbSalvarLoc = (ImageButton) findViewById(R.id.IbSalvarLoc);
         ibMove = (ImageButton) findViewById(R.id.btMove);
         IbSalvarLoc.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
 
             {
-                mydatabase.execSQL("UPDATE Parametros SET longitude = "+dLatitude+ " , latitude =  "+dLongitude);
+                mydatabase.execSQL("UPDATE Parametros SET longitude = " + dLatitude + " , latitude =  " + dLongitude);
             }
         });
-
 
 
         ibMove.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
 
             {
-                if(mensagem.equals("move040370"))
+                if (mensagem.equals("move040370"))
                     mensagem = "nomove040370";
                 else
                     mensagem = "move040370";
 
                 SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage("041985064115", null, mensagem, null, null);
+                smsManager.sendTextMessage("041999696921", null, mensagem, null, null);
                 Toast.makeText(getApplicationContext(), "Move",
                         Toast.LENGTH_LONG).show();
 
@@ -199,28 +198,26 @@ public class MainActivity extends AppCompatActivity  {
         });
         locationListenerGps = new LocationListener() {
             public void onLocationChanged(Location location) {
-                float [] dist = new float[1];
+                float[] dist = new float[1];
                 dist[0] = 0;
-                if (!bGpsFirst){
+                if (!bGpsFirst) {
                     bGpsFirst = true;
-                    org  = new Location("Org");
-                    dLatitude  = location.getLatitude();
+                    org = new Location("Org");
+                    dLatitude = location.getLatitude();
                     dLongitude = location.getLongitude();
                     org.setLongitude(dLongitude);
                     org.setLatitude(dLatitude);
 
-                    textView4.setText("Latitude Org: "+dLatitude);
-                    textView5.setText("Longitude Org:"+dLongitude);
+                    textView4.setText("Latitude Org: " + dLatitude);
+                    textView5.setText("Longitude Org:" + dLongitude);
 
                 }
-                Location.distanceBetween(dLatitude,dLongitude,location.getLatitude(),location.getLongitude(),dist);
+                Location.distanceBetween(dLatitude, dLongitude, location.getLatitude(), location.getLongitude(), dist);
 
 
-
-                textView.setText("Distancia Origem:"+String.valueOf(org.distanceTo(location)));
-                textView2.setText("Latitude: "+Location.convert(location.getLatitude(),Location.PARCELABLE_WRITE_RETURN_VALUE));
-                textView3.setText("Longitude:"+Location.convert(location.getLongitude(),Location.PARCELABLE_WRITE_RETURN_VALUE));
-
+                textView.setText("Distancia Origem:" + String.valueOf(org.distanceTo(location)));
+                textView2.setText("Latitude: " + Location.convert(location.getLatitude(), Location.PARCELABLE_WRITE_RETURN_VALUE));
+                textView3.setText("Longitude:" + Location.convert(location.getLongitude(), Location.PARCELABLE_WRITE_RETURN_VALUE));
 
 
                 //timer1.cancel();
@@ -234,11 +231,13 @@ public class MainActivity extends AppCompatActivity  {
                 toast.show();
 
             }
+
             public void onProviderEnabled(String provider) {
                 Toast toast = Toast.makeText(context, "GPS Ativado!", Toast.LENGTH_SHORT);
                 toast.show();
 
             }
+
             public void onStatusChanged(String provider, int status, Bundle extras) {
 
             }
@@ -246,20 +245,15 @@ public class MainActivity extends AppCompatActivity  {
 
         try {
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER,
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                     0,
                     0,
                     locationListenerGps);
 
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             showMessage(e.getMessage());
         }
-
-
-
-
 
 
     }
@@ -287,21 +281,18 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
     }
-    public class ClientThread implements Runnable
-    {
 
-        public void run()
-        {
-            try
-            {
+    public class ClientThread implements Runnable {
+
+        public void run() {
+            try {
                 InetAddress serverAddr = InetAddress.getByName("192.168.0.14");
-                Socket socket = new Socket(serverAddr,81);
+                Socket socket = new Socket(serverAddr, 81);
                 connected = true;
                 boolean bEnviado = false;
                 //Context context = getApplicationContext();
                 int duration = Toast.LENGTH_SHORT;
-                if (connected)
-                {
+                if (connected) {
                     try {
                         PrintWriter out = new PrintWriter(
                                 new BufferedWriter(new OutputStreamWriter(
@@ -326,12 +317,10 @@ public class MainActivity extends AppCompatActivity  {
                             //Toast toast = Toast.makeText(context, e.getMessage(), duration);
                             //toast.show();
                             //e.printStackTrace();
-                            Log.e("NETWORK-RECEIVE", "Something goes wrong: IOException",e);
+                            Log.e("NETWORK-RECEIVE", "Something goes wrong: IOException", e);
                         }
 
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         Toast toast = Toast.makeText(context, e.getMessage(), duration);
                         toast.show();
                     }
@@ -340,25 +329,23 @@ public class MainActivity extends AppCompatActivity  {
                 socket.close();
                 Log.d("ClientActivity", "C: Closed.");
                 connected = false;
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Log.e("ClientActivity", "C: Error", e);
                 connected = false;
             }
         }
     }
 
-    public void showMessage(String mens){
+    public void showMessage(String mens) {
         Toast toast = Toast.makeText(context, mens, Toast.LENGTH_SHORT);
         toast.show();
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_SEND_SMS: {
-                if (ContextCompat.checkSelfPermission(this,Manifest.permission.READ_PHONE_STATE)
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
                         != PackageManager.PERMISSION_GRANTED) {
                     if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                             Manifest.permission.READ_PHONE_STATE)) {
@@ -370,7 +357,7 @@ public class MainActivity extends AppCompatActivity  {
                 }
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        return;
+                    return;
 
                 } else {
                     Toast.makeText(getApplicationContext(),
@@ -378,8 +365,8 @@ public class MainActivity extends AppCompatActivity  {
                     return;
                 }
             }
-            case MY_PERMISSIONS_READ_PHONE_STATE:{
-                if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)
+            case MY_PERMISSIONS_READ_PHONE_STATE: {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
                     if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -389,47 +376,43 @@ public class MainActivity extends AppCompatActivity  {
                                 MY_PERMISSIONS_ACCESS_FINE_LOCATION);
                     }
                 }
-                if(grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     telephony = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-                    if(telephony !=null) {
+                    if (telephony != null) {
                         IMEI = telephony.getDeviceId();
-                       Toast.makeText(context, IMEI, Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
+                        Toast.makeText(context, IMEI, Toast.LENGTH_SHORT).show();
+                    } else {
                         Toast.makeText(getApplicationContext(),
                                 "Falhou ao obter IMEI.", Toast.LENGTH_LONG).show();
                     }
                     return;
-                }
-                else
-                {
+                } else {
                     Toast.makeText(getApplicationContext(),
                             "Falhou ao obter permissão para ler estado do celular.", Toast.LENGTH_LONG).show();
                     return;
                 }
 
             }
-            case MY_PERMISSIONS_ACCESS_FINE_LOCATION:{
-                    if(grantResults.length > 0
+            case MY_PERMISSIONS_ACCESS_FINE_LOCATION: {
+                if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER,
-                                0,
-                                0,
-                                locationListenerGps);
+                    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                            0,
+                            0,
+                            locationListenerGps);
 
-                        Toast toast = Toast.makeText(context, "GPS Requesitado!", Toast.LENGTH_SHORT);
-                        toast.show();
+                    Toast toast = Toast.makeText(context, "GPS Requesitado!", Toast.LENGTH_SHORT);
+                    toast.show();
 
 
-                    }
-                    return;
                 }
-
+                return;
             }
+
         }
+    }
 
 
 }

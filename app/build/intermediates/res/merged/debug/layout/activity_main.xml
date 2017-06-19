@@ -21,9 +21,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btOnOff"
-        android:layout_alignTop="@+id/btCamera"
-        android:layout_toEndOf="@+id/btCamera"
-        android:src="@drawable/turnoff" />
+        android:src="@drawable/turnoff"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/btCamera" />
+
+    <ImageButton
+        android:id="@+id/btMove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/acionabutton"
+        android:layout_below="@+id/textView4"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
